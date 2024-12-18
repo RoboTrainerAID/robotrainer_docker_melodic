@@ -1,0 +1,1 @@
+./start_docker.sh "pwd && ls -a"
