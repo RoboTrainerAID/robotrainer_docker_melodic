@@ -1,15 +1,14 @@
 #!/bin/sh
 
 # Autostart command to run inside the container, default is bash
-# Usage: Modify ./autostart.sh file
-# Usage: Run from cli with ./start_docker "custom command"
+# Usage1: Modify ./autostart.sh file and add custom command there
+# Usage2: Run from cli with ./start_docker "custom command"
 COMMAND=${1:-bash}
-
-# Custom domain id
+CONTAINER_NAME=robotrainer:melodic
 ROS_DOMAIN_ID=36
 
-uid=$(eval "id -u")
-gid=$(eval "id -g")
+# Ensure XAUTHORITY is set
+export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}
 
 docker run \
     --name robotrainer_melodic \
@@ -17,11 +16,19 @@ docker run \
     -it \
     --net host \
     --rm \
-    -e DISPLAY=$DISPLAY \
-    -e ROS_DOMAIN_ID=$ROS_DOMAIN_ID \
+    -e DISPLAY=${DISPLAY} \
+    -e ROS_DOMAIN_ID=${ROS_DOMAIN_ID} \
+    -e QT_X11_NO_MITSHM=1 \
+    -e XAUTHORITY=${XAUTHORITY} \
+    -v $XAUTHORITY:$XAUTHORITY:rw \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v $PWD/src:/home/docker/ros_ws/src:rw \
     -v $PWD/.vscode:/home/docker/ros_ws/src/.vscode \
     -v /dev:/dev  \
-    robotrainer:melodic \
-    $COMMAND
+    ${CONTAINER_NAME} \
+    ${COMMAND}
+
     # --env-file .env \
+    # libEGL for Gazebo needs access to /dev/dri/renderD129
+    # -v /dev:/dev \
+    # -v /lib/modules:/lib/modules:ro \
