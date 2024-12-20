@@ -3,7 +3,7 @@
 ##############################################################################
 ARG ROS_DISTRO=melodic
 # Ubuntu 18.04.
-FROM osrf/ros:${ROS_DISTRO}-desktop-full AS ros_melodic
+FROM osrf/ros:${ROS_DISTRO}-desktop-full
 ENV TZ=Europe/Berlin
 ENV TERM=xterm-256color
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
@@ -57,4 +57,4 @@ RUN sudo sed --in-place --expression \
     '$isource "/home/${USER}/ros_ws/devel/setup.bash"' \
     /ros_entrypoint.sh
 
-CMD [bash]
+CMD ["bash"]
