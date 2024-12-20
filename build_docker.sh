@@ -1,11 +1,13 @@
 #!/bin/sh
-uid=$(eval "id -u")
-gid=$(eval "id -g")
+
+CONTAINER_NAME=robotrainer:melodic
 
 docker build \
-    --build-arg UID="$uid" \
-    --build-arg GID="$gid" \
-    --build-arg ROS_DISTRO=melodic \
-    -t robotrainer:melodic \
+    --build-arg UID="$(id -u)" \
+    --build-arg GID="$(id -g)" \
+    -t ${CONTAINER_NAME} \
     .
+
     # --no-cache \
+    # --progress plain \
+    # --build-arg CACHE_BUST="$(date +%s)" \

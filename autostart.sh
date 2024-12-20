@@ -1,1 +1,1 @@
-./start_docker.sh "pwd && ls -a"
+./start_docker.sh "roscore"
