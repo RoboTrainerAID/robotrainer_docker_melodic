@@ -4,14 +4,14 @@
 # Usage1: Modify ./autostart.sh file and add custom command there
 # Usage2: Run from cli with ./start_docker "custom command"
 COMMAND=${1:-bash}
-CONTAINER_NAME=robotrainer:melodic
+CONTAINER_NAME=robotrainer_melodic
 ROS_DOMAIN_ID=36
 
 # Ensure XAUTHORITY is set
 export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}
 
 docker run \
-    --name robotrainer_melodic \
+    --name ${CONTAINER_NAME} \
     --privileged \
     -it \
     --net host \
@@ -25,7 +25,7 @@ docker run \
     -v $PWD/src:/home/docker/ros_ws/src:rw \
     -v $PWD/.vscode:/home/docker/ros_ws/src/.vscode \
     -v /dev:/dev  \
-    ${CONTAINER_NAME} \
+    ${CONTAINER_NAME}:melodic \
     ${COMMAND}
 
     # --env-file .env \
