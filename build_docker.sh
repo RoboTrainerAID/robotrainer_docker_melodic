@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CONTAINER_NAME=robotrainer:melodic
+CONTAINER_NAME=robotrainer_melodic
 
 docker build \
     --build-arg UID="$(id -u)" \
