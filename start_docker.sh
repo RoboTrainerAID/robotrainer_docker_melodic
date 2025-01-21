@@ -5,6 +5,7 @@
 # Usage2: Run from cli with ./start_docker "custom command"
 COMMAND=${1:-bash}
 CONTAINER_NAME=robotrainer_melodic
+CONTAINER_TAG=melodic
 ROS_DOMAIN_ID=36
 
 # Check if the container is already running
@@ -32,7 +33,7 @@ docker run \
     -v $PWD/src:/home/docker/ros_ws/src:rw \
     -v $PWD/.vscode:/home/docker/ros_ws/src/.vscode \
     -v /dev:/dev  \
-    ${CONTAINER_NAME}:melodic \
+    ${CONTAINER_NAME}:${CONTAINER_TAG} \
     ${COMMAND}
 
     # --env-file .env \
