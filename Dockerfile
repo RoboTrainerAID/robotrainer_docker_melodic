@@ -28,7 +28,10 @@ RUN usermod -a -G video ${USER}
 ##############################################################################
 # Install default packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    iputils-ping nano htop git sudo wget curl gedit python-pip python-catkin-tools \
+    iputils-ping nano htop git sudo wget curl gedit \
+    python-pip \
+    python-catkin-tools \
+    gdb \
     && rm -rf /var/lib/apt/lists/*
 
 # Install custom dependencies
@@ -38,6 +41,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 # RUN pip install \
 #     <YOUR_PACKAGE>
+RUN pip install \
+    pyyaml
 
 ##############################################################################
 ##                                 dependencies_ws                          ##
@@ -99,7 +104,7 @@ COPY ./src ./src
 
 # Build ros_ws
 RUN . /home/${USER}/dependencies_ws/devel/setup.sh && \
-    catkin config --merge-devel && catkin init && catkin build
+    catkin config --merge-devel && catkin init && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN echo "source /home/${USER}/ros_ws/devel/setup.bash" >> /home/${USER}/.bashrc
 
 ##############################################################################

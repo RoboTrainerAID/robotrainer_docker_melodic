@@ -1,0 +1,43 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/docker/ros_ws/devel/include/**",
+        "/home/docker/dependencies_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_base_controller_utils/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_base_velocity_smoother/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_cartesian_controller/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_collision_velocity_filter/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_footprint_observer/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_frame_tracker/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_mecanum_controller/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_model_identifier/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_obstacle_distance/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_omni_drive_controller/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_tricycle_controller/include/**",
+        "/home/docker/dependencies_ws/src/cob_control/cob_twist_controller/include/**",
+        "/home/docker/dependencies_ws/src/force_torque_sensor/include/**",
+        "/home/docker/dependencies_ws/src/iirob_filters/include/**",
+        "/home/docker/dependencies_ws/src/iirob_led/include/**",
+        "/home/docker/dependencies_ws/src/leg_tracker/include/**",
+        "/home/docker/ros_ws/src/robotrainer_control/robotrainer_controllers/include/**",
+        "/home/docker/ros_ws/src/robotrainer_control/robotrainer_helper_types/include/**",
+        "/home/docker/ros_ws/src/robotrainer_control/robotrainer_modalities/include/**",
+        "/home/docker/ros_ws/src/robotrainer_control/robotrainer_panel/include/**",
+        "/home/docker/ros_ws/src/robotrainer_control/robotrainer_parameters/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

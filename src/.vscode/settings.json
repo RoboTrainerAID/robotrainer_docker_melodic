@@ -1,3 +1,15 @@
 {
-    "git.repositoryScanMaxDepth": -1
+    "git.repositoryScanMaxDepth": -1,
+    "python.autoComplete.extraPaths": [
+        "/home/docker/ros_ws/devel/lib/python2.7/dist-packages",
+        "/home/docker/dependencies_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/docker/ros_ws/devel/lib/python2.7/dist-packages",
+        "/home/docker/dependencies_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ],
+    "ros.distro": "melodic",
+    "python.pythonPath": "/usr/bin/python"
 }
