@@ -56,16 +56,16 @@ WORKDIR /home/${USER}/dependencies_ws/src
 # RUN git clone --branch <BRANCH> <REPO_URL>
 
 # Build dependencies_ws
-WORKDIR /home/${USER}/dependencies_ws
-RUN rosdep update --rosdistro ${ROS_DISTRO}
-USER root
-RUN apt-get update 
-RUN rosdep install --from-paths src --ignore-src -r -y
-RUN rm -rf /var/lib/apt/lists/*
-USER ${USER}
-RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-    catkin config --merge-devel && catkin init && catkin build
-RUN echo "source /home/${USER}/dependencies_ws/devel/setup.bash" >> /home/${USER}/.bashrc
+# WORKDIR /home/${USER}/dependencies_ws
+# RUN rosdep update --rosdistro ${ROS_DISTRO}
+# USER root
+# RUN apt-get update 
+# RUN rosdep install --from-paths src --ignore-src -r -y
+# RUN rm -rf /var/lib/apt/lists/*
+# USER ${USER}
+# RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
+#     catkin config --merge-devel && catkin init && catkin build
+# RUN echo "source /home/${USER}/dependencies_ws/devel/setup.bash" >> /home/${USER}/.bashrc
 
 ##############################################################################
 ##                                 ros_ws                                   ##
@@ -77,16 +77,18 @@ WORKDIR /home/${USER}/ros_ws
 COPY ./src ./src
 
 # Build ros_ws
-RUN . /home/${USER}/dependencies_ws/devel/setup.sh && \
+# RUN . /home/${USER}/dependencies_ws/devel/setup.sh && \
+#     catkin config --merge-devel && catkin init && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug
+RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
     catkin config --merge-devel && catkin init && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN echo "source /home/${USER}/ros_ws/devel/setup.bash" >> /home/${USER}/.bashrc
 
 ##############################################################################
 ##                                 Autostart                                ##
 ##############################################################################
-RUN sudo sed --in-place --expression \
-    '$isource "/home/${USER}/dependencies_ws/devel/setup.bash"' \
-    /ros_entrypoint.sh
+# RUN sudo sed --in-place --expression \
+#     '$isource "/home/${USER}/dependencies_ws/devel/setup.bash"' \
+#     /ros_entrypoint.sh
 
 RUN sudo sed --in-place --expression \
     '$isource "/home/${USER}/ros_ws/devel/setup.bash"' \
