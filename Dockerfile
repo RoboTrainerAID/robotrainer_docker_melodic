@@ -79,9 +79,9 @@ COPY ./src ./src
 # Build ros_ws
 # RUN . /home/${USER}/dependencies_ws/devel/setup.sh && \
 #     catkin config --merge-devel && catkin init && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug
-RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-    catkin config --merge-devel && catkin init && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug
-RUN echo "source /home/${USER}/ros_ws/devel/setup.bash" >> /home/${USER}/.bashrc
+# RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
+#     catkin config --merge-devel && catkin init && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug
+# RUN echo "source /home/${USER}/ros_ws/devel/setup.bash" >> /home/${USER}/.bashrc
 
 ##############################################################################
 ##                                 Autostart                                ##
@@ -90,8 +90,8 @@ RUN echo "source /home/${USER}/ros_ws/devel/setup.bash" >> /home/${USER}/.bashrc
 #     '$isource "/home/${USER}/dependencies_ws/devel/setup.bash"' \
 #     /ros_entrypoint.sh
 
-RUN sudo sed --in-place --expression \
-    '$isource "/home/${USER}/ros_ws/devel/setup.bash"' \
-    /ros_entrypoint.sh
+# RUN sudo sed --in-place --expression \
+#     '$isource "/home/${USER}/ros_ws/devel/setup.bash"' \
+#     /ros_entrypoint.sh
 
 CMD ["bash"]
