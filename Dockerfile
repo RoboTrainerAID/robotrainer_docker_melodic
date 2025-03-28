@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     python-pip \
     python-catkin-tools \
     gdb \
+    ros-${ROS_DISTRO}-plotjuggler-ros \
     && rm -rf /var/lib/apt/lists/*
 
 # Install custom dependencies
@@ -53,33 +54,6 @@ WORKDIR /home/${USER}/dependencies_ws/src
 
 # ARG CACHE_BUST
 # RUN git clone --branch <BRANCH> <REPO_URL>
-
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/ati_force_torque.git
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/camera_lower_leg_tracking.git
-RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/cob_calibration_data.git
-RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/cob_common.git
-RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/cob_control.git
-# RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/cob_driver.git
-RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/cob_environments.git
-# RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/cob_robots.git
-RUN git clone --branch melodic https://github.com/RoboTrainerAID/force_torque_sensor.git
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/gait_parameters_estimation.git
-# RUN git clone --branch main https://github.com/RoboTrainerAID/human_body_detection.git
-RUN git clone --branch melodic_robotrainer2 https://github.com/RoboTrainerAID/iirob_filters.git
-RUN git clone --branch melodic https://github.com/RoboTrainerAID/iirob_led.git
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/ipr_helpers.git
-RUN git clone --branch melodic https://github.com/RoboTrainerAID/leg_tracker.git
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/robotrainer.git
-
-# This is also copied to ros_ws
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/robotrainer_control.git
-
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/robotrainer_user_performance.git
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/ros_canopen.git
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/ros_opcua_communication.git
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/setup_cob4.git
-# RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/sr2_bringup.git
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/sr2_dashboard.git
 
 # Build dependencies_ws
 WORKDIR /home/${USER}/dependencies_ws
