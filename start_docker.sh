@@ -5,7 +5,7 @@
 # Usage2: Run from cli with ./start_docker "custom command"
 COMMAND=${1:-bash}
 CONTAINER_NAME=robotrainer_melodic
-CONTAINER_TAG=melodic
+CONTAINER_TAG=melodic_template
 ROS_DOMAIN_ID=36
 
 # Check if the container is already running
