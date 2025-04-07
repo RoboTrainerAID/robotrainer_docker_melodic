@@ -43,7 +43,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 # RUN pip install \
 #     <YOUR_PACKAGE>
 RUN pip install \
-    pyyaml
+    pyyaml \
+    scipy
 
 ##############################################################################
 ##                                 dependencies_ws                          ##
@@ -54,18 +55,23 @@ WORKDIR /home/${USER}/dependencies_ws/src
 
 # ARG CACHE_BUST
 # RUN git clone --branch <BRANCH> <REPO_URL>
+# RUN git clone --branch melodic https://github.com/RoboTrainerAID/gait_parameters_estimation.git
+RUN git clone --branch main https://github.com/RoboTrainerAID/human_body_detection.git
+RUN git clone --branch melodic_robotrainer2 https://github.com/RoboTrainerAID/iirob_filters.git
+RUN git clone --branch melodic https://github.com/RoboTrainerAID/ipr_helpers.git
+RUN git clone --branch melodic https://github.com/RoboTrainerAID/leg_tracker.git
 
 # Build dependencies_ws
-# WORKDIR /home/${USER}/dependencies_ws
-# RUN rosdep update --rosdistro ${ROS_DISTRO}
-# USER root
-# RUN apt-get update 
-# RUN rosdep install --from-paths src --ignore-src -r -y
-# RUN rm -rf /var/lib/apt/lists/*
-# USER ${USER}
-# RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-#     catkin config --merge-devel && catkin init && catkin build
-# RUN echo "source /home/${USER}/dependencies_ws/devel/setup.bash" >> /home/${USER}/.bashrc
+WORKDIR /home/${USER}/dependencies_ws
+RUN rosdep update --rosdistro ${ROS_DISTRO}
+USER root
+RUN apt-get update 
+RUN rosdep install --from-paths src --ignore-src -r -y
+RUN rm -rf /var/lib/apt/lists/*
+USER ${USER}
+RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
+    catkin config --merge-devel && catkin init && catkin build
+RUN echo "source /home/${USER}/dependencies_ws/devel/setup.bash" >> /home/${USER}/.bashrc
 
 ##############################################################################
 ##                                 ros_ws                                   ##
@@ -77,21 +83,21 @@ WORKDIR /home/${USER}/ros_ws
 COPY ./src ./src
 
 # Build ros_ws
-# RUN . /home/${USER}/dependencies_ws/devel/setup.sh && \
-#     catkin config --merge-devel && catkin init && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug
+RUN . /home/${USER}/dependencies_ws/devel/setup.sh && \
+    catkin config --merge-devel && catkin init && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug
 # RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
 #     catkin config --merge-devel && catkin init && catkin build --cmake-args -DCMAKE_BUILD_TYPE=Debug
-# RUN echo "source /home/${USER}/ros_ws/devel/setup.bash" >> /home/${USER}/.bashrc
+RUN echo "source /home/${USER}/ros_ws/devel/setup.bash" >> /home/${USER}/.bashrc
 
 ##############################################################################
 ##                                 Autostart                                ##
 ##############################################################################
-# RUN sudo sed --in-place --expression \
-#     '$isource "/home/${USER}/dependencies_ws/devel/setup.bash"' \
-#     /ros_entrypoint.sh
+RUN sudo sed --in-place --expression \
+    '$isource "/home/${USER}/dependencies_ws/devel/setup.bash"' \
+    /ros_entrypoint.sh
 
-# RUN sudo sed --in-place --expression \
-#     '$isource "/home/${USER}/ros_ws/devel/setup.bash"' \
-#     /ros_entrypoint.sh
+RUN sudo sed --in-place --expression \
+    '$isource "/home/${USER}/ros_ws/devel/setup.bash"' \
+    /ros_entrypoint.sh
 
 CMD ["bash"]
