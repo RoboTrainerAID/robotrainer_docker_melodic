@@ -59,7 +59,8 @@ WORKDIR /home/${USER}/dependencies_ws/src
 RUN git clone --branch main https://github.com/RoboTrainerAID/human_body_detection.git
 RUN git clone --branch melodic_robotrainer2 https://github.com/RoboTrainerAID/iirob_filters.git
 RUN git clone --branch melodic https://github.com/RoboTrainerAID/ipr_helpers.git
-RUN git clone --branch melodic https://github.com/RoboTrainerAID/leg_tracker.git
+# RUN git clone --branch melodic https://github.com/RoboTrainerAID/leg_tracker.git
+# RUN git clone --branch melodic git@github.com:RoboTrainerAID/camera_lower_leg_tracking.git
 
 # Build dependencies_ws
 WORKDIR /home/${USER}/dependencies_ws
@@ -81,6 +82,12 @@ WORKDIR /home/${USER}/ros_ws
 
 # COPY <HOST_PATH> <CONTAINER_PATH>
 COPY ./src ./src
+
+USER root
+RUN apt-get update 
+RUN rosdep install --from-paths src --ignore-src -r -y
+RUN rm -rf /var/lib/apt/lists/*
+USER ${USER}
 
 # Build ros_ws
 RUN . /home/${USER}/dependencies_ws/devel/setup.sh && \
