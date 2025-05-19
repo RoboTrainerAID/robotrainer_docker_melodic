@@ -53,14 +53,24 @@ USER ${USER}
 RUN mkdir -p /home/${USER}/dependencies_ws/src
 WORKDIR /home/${USER}/dependencies_ws/src
 
-# ARG CACHE_BUST
+ARG CACHE_BUST
 # RUN git clone --branch <BRANCH> <REPO_URL>
+
+# Necessary for standalone urdf
+RUN git clone --branch main https://github.com/RoboTrainerAID/za_experimental.git
+RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/cob_robots.git
+RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/cob_calibration_data.git
+RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/cob_common.git
+RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/sr2_bringup.git
+RUN git clone --branch melodic https://github.com/RoboTrainerAID/robotrainer.git
+
+# Gait related repos
 # RUN git clone --branch melodic https://github.com/RoboTrainerAID/gait_parameters_estimation.git
 RUN git clone --branch main https://github.com/RoboTrainerAID/human_body_detection.git
 RUN git clone --branch melodic_robotrainer2 https://github.com/RoboTrainerAID/iirob_filters.git
 RUN git clone --branch melodic https://github.com/RoboTrainerAID/ipr_helpers.git
 # RUN git clone --branch melodic https://github.com/RoboTrainerAID/leg_tracker.git
-# RUN git clone --branch melodic git@github.com:RoboTrainerAID/camera_lower_leg_tracking.git
+# RUN git clone --branch melodic https://github.com/RoboTrainerAID/camera_lower_leg_tracking.git
 
 # Build dependencies_ws
 WORKDIR /home/${USER}/dependencies_ws
@@ -80,6 +90,7 @@ RUN echo "source /home/${USER}/dependencies_ws/devel/setup.bash" >> /home/${USER
 RUN mkdir -p /home/${USER}/ros_ws/src
 WORKDIR /home/${USER}/ros_ws
 
+ARG CACHE_BUST
 # COPY <HOST_PATH> <CONTAINER_PATH>
 COPY ./src ./src
 
