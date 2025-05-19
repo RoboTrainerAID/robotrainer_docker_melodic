@@ -12,10 +12,10 @@ toe_detection.launch OR feet_detection.launch
 gait_estimator.launch
 
 # Record only raw data
-rosbag record /base/fts_adaptive_force_controller/debug/velocity_output /mobile_robot_pose /base/output_data /lower_legs_camera/depth_registered/points /base_laser_back/scan
+rosbag record /base/fts_adaptive_force_controller/debug/velocity_output /robotrainer/mobile_robot_pose /base/output_data /lower_legs_camera/depth_registered/points /base_laser_back/scan
 
 # Record all data with processed and output data
-rosbag record /base/fts_adaptive_force_controller/debug/velocity_output /mobile_robot_pose /leg_detection/people_msg_stamped /base/output_data /right_toe /left_toe /human_body_detection/points /lower_legs_camera/depth_registered/points /base_laser_back/scan /camera_lower_leg_tracking/right_toe /camera_lower_leg_tracking/left_toe /camera_lower_leg_tracking/right_heel /camera_lower_leg_tracking/left_heel /camera_lower_leg_tracking/right_ankle /camera_lower_leg_tracking/left_ankle /camera_lower_leg_tracking/right_foot_axis /camera_lower_leg_tracking/left_foot_axis /camera_lower_leg_tracking/right_Foot /camera_lower_leg_tracking/left_Foot /camera_lower_leg_tracking/right_Leg_icp /camera_lower_leg_tracking/left_Leg_icp /footStrip -e "(.*)gait(.*)"
+rosbag record /base/fts_adaptive_force_controller/debug/velocity_output /robotrainer/mobile_robot_pose /leg_detection/people_msg_stamped /base/output_data /right_toe /left_toe /human_body_detection/points /lower_legs_camera/depth_registered/points /base_laser_back/scan /camera_lower_leg_tracking/right_toe /camera_lower_leg_tracking/left_toe /camera_lower_leg_tracking/right_heel /camera_lower_leg_tracking/left_heel /camera_lower_leg_tracking/right_ankle /camera_lower_leg_tracking/left_ankle /camera_lower_leg_tracking/right_foot_axis /camera_lower_leg_tracking/left_foot_axis /camera_lower_leg_tracking/right_Foot /camera_lower_leg_tracking/left_Foot /camera_lower_leg_tracking/right_Leg_icp /camera_lower_leg_tracking/left_Leg_icp /footStrip -e "(.*)gait(.*)"
 
 # copy data with scp and ssh with laptop
 scp robotrainer_iras:/home/robotrainer/workspace/ros_ws_melodic_robotrainer/src/za_experimental/data/2025-X.bag /home/andreas/code/robotrainer/bags/
@@ -28,7 +28,7 @@ roslaunch gait_parameters_estimation collect_data.launch
 
 ## How to Start
 ```bash
-rosbag play src/bags/gait_data_2025-03-28-17-39-05.bag --topics /base/fts_adaptive_force_controller/debug/velocity_output /mobile_robot_pose /leg_detection/people_msg_stamped /base/output_data /right_toe /left_toe /human_body_detection/points
+rosbag play src/bags/gait_data_2025-03-28-17-39-05.bag --topics /base/fts_adaptive_force_controller/debug/velocity_output /robotrainer/mobile_robot_pose /leg_detection/people_msg_stamped /base/output_data /right_toe /left_toe /human_body_detection/points
 
 roslaunch gait_parameters_estimation gait_estimation.launch
 ```
@@ -40,7 +40,7 @@ Only use `gait_estimation_node.py`
 ### Node: gait_estimation_node.py
 Class: EstimatorBase
 - Input Speed: /base/fts_adaptive_force_controller/debug/velocity_output (geometry_msgs/TwistStamped)(50 Hz)
-- Input Pose: /mobile_robot_pose (ipr_helpers/Pose2DStamped)(500 Hz)
+- Input Pose: /robotrainer/mobile_robot_pose (ipr_helpers/Pose2DStamped)(500 Hz)
 
 Class: EstimatorLegs (Laserscanner)
 - Input Leg: /leg_detection/people_msg_stamped (leg_tracker/PersonMsg)(24 Hz)
