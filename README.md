@@ -11,11 +11,14 @@ leg_tracker_one_person.launch
 toe_detection.launch OR feet_detection.launch
 gait_estimator.launch
 
+# Record only raw data
+rosbag record /base/fts_adaptive_force_controller/debug/velocity_output /mobile_robot_pose /base/output_data /lower_legs_camera/depth_registered/points /base_laser_back/scan
 
-rosbag record /tf /tf_static /base/fts_adaptive_force_controller/debug/velocity_output /mobile_robot_pose /leg_detection/people_msg_stamped /base/output_data /right_toe /left_toe /human_body_detection/points /lower_legs_camera/depth_registered/points /base_laser_back/scan /camera_lower_leg_tracking/right_toe /camera_lower_leg_tracking/left_toe /camera_lower_leg_tracking/right_heel /camera_lower_leg_tracking/left_heel /camera_lower_leg_tracking/right_ankle /camera_lower_leg_tracking/left_ankle /camera_lower_leg_tracking/right_foot_axis /camera_lower_leg_tracking/left_foot_axis /camera_lower_leg_tracking/right_Foot /camera_lower_leg_tracking/left_Foot /camera_lower_leg_tracking/right_Leg_icp /camera_lower_leg_tracking/left_Leg_icp /footStrip -e "(.*)gait(.*)"
+# Record all data with processed and output data
+rosbag record /base/fts_adaptive_force_controller/debug/velocity_output /mobile_robot_pose /leg_detection/people_msg_stamped /base/output_data /right_toe /left_toe /human_body_detection/points /lower_legs_camera/depth_registered/points /base_laser_back/scan /camera_lower_leg_tracking/right_toe /camera_lower_leg_tracking/left_toe /camera_lower_leg_tracking/right_heel /camera_lower_leg_tracking/left_heel /camera_lower_leg_tracking/right_ankle /camera_lower_leg_tracking/left_ankle /camera_lower_leg_tracking/right_foot_axis /camera_lower_leg_tracking/left_foot_axis /camera_lower_leg_tracking/right_Foot /camera_lower_leg_tracking/left_Foot /camera_lower_leg_tracking/right_Leg_icp /camera_lower_leg_tracking/left_Leg_icp /footStrip -e "(.*)gait(.*)"
 
 # copy data with scp and ssh with laptop
-scp robotrainer_iras:/home/robotrainer/workspace/ros_ws_melodic_robotrainer/src/za_experimental/data/2025-04-25-17-17-05.bag /home/andreas/code/robotrainer/bags/
+scp robotrainer_iras:/home/robotrainer/workspace/ros_ws_melodic_robotrainer/src/za_experimental/data/2025-X.bag /home/andreas/code/robotrainer/bags/
 ```
 
 
