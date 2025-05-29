@@ -11,5 +11,14 @@
         "string": "cpp",
         "unordered_map": "cpp",
         "vector": "cpp"
-    }
+    },
+    "python.analysis.typeCheckingMode": "off",
+    "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.formatOnSave": false
+  },
+    "autopep8.args": [
+    "--max-line-length",
+    "150"
+    ]
 }
