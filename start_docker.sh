@@ -31,6 +31,7 @@ docker run \
     -v $XAUTHORITY:$XAUTHORITY:rw \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v $PWD/src:/home/docker/ros_ws/src \
+    -v $PWD/data:/home/docker/ros_ws/data \
     -v /dev:/dev  \
     ${CONTAINER_NAME}:${CONTAINER_TAG} \
     ${COMMAND}
