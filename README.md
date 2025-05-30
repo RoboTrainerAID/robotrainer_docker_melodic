@@ -1,5 +1,62 @@
 # robotrainer_docker_melodic
 
+## How to use
+1. Put .bag files into the `data/` folder
+2. The bag files are mounted into `/home/docker/ros_ws/data/` 
+3. Clone the gait_parameter_estimation package into `src/` folder of the workspace:
+   ```bash
+   cd src/
+   git clone https://github.com/RoboTrainerAID/gait_parameters_estimation.git
+   ```
+4. Build the docker image with `./build_docker.sh`
+5. Start the container with `./start_docker.sh`
+   - Executing `./start_docker.sh` again in a new terminal will connect to the already running container.
+6. Launch robot URDF and gait_estimation with:
+   ```bash
+   roslaunch gait_parameters_estimation only_gait_estimation.launch
+   ```
+7. Launch RViz for visualization with:
+   ```bash
+   roslaunch za_experimental rviz.launch
+   ```
+8. A: Play the .bag file directly with `rosbag play data/your_bag_file.bag`
+   <!-- B: Play the .bag file with plotjuggler and have more control about playback and data plotting
+   - Start plotjuggler with `rosrun plotjuggler plotjuggler`
+   - Open the bag file with `File -> Data: Load data from file` and select the .bag file, Select all topics
+   - Select the predefined layout with `Layout -> Load Layout` and choose `src/gait_parameters_estimation/include/plotjuggler_config.xml`
+   - Tick `Publishers -> ROS Topic Re-Publisher` to stream from bag to rviz -->
+9. With Plotjuggler all other topics that can not be visualized can be plotted in graphs (e.g. Heart rate).
+   - Start Plotjuggler with `rosrun plotjuggler plotjuggler`
+   - Select `Streaming -> ROS Topic Subscriber` Press START and select all topics
+   - Increase the buffer size from 5 -> 20
+   - Drag and drop the topics into the graph area
+
+## Topics to record:
+- /base/fts_adaptive_force_controller/debug/velocity_output
+- /base/output_data
+- /base/virtual_forces/modalities_debug/position
+- /base/virtual_forces/modalities_debug/velocity_in
+- /base/virtual_forces/modalities_debug/velocity_out
+- /base/virtual_forces/modalities_debug/resulting_velocity
+- /base/virtual_forces/modalities_debug/resulting_force
+    - Diese Kraft ist skaliert auf max_force (default 100N), das heißt alles x100 ergibt die aktuell wirkende Kraft in Newton
+- /base/virtual_forces/modalities_debug/status
+- /base_laser_back/scan
+- /biosensors/polar_oh1/hr
+- /biosensors/polar_oh1/ppg_ch0
+- /biosensors/polar_oh1/ppg_ch1
+- /biosensors/polar_oh1/ppg_ch2
+- /biosensors/polar_oh1/ppg_ch3
+- /biosensors/polar_oh1/ppi
+- /biosensors/polar_oh1/hrv
+- /lower_legs_camera/depth_registered/points
+- /map
+- /mobile_robot_pose
+- /robotrainer_deviation/current_path_index
+- /robotrainer_deviation/robotrainer_deviation
+- /robotrainer_deviation/robotrainer_deviation_markers
+- /toe_detection/toe_positions
+
 ## How to collect data
 ```bash
 # Nodes to run:
@@ -28,7 +85,7 @@ roslaunch gait_parameters_estimation collect_data.launch
 
 ## How to Start
 ```bash
-rosbag play src/bags/gait_data_2025-03-28-17-39-05.bag --topics /base/fts_adaptive_force_controller/debug/velocity_output /mobile_robot_pose /leg_detection/people_msg_stamped /base/output_data /right_toe /left_toe /human_body_detection/points
+rosbag play src/data/gait_data_2025-03-28-17-39-05.bag --topics /base/fts_adaptive_force_controller/debug/velocity_output /mobile_robot_pose /leg_detection/people_msg_stamped /base/output_data /right_toe /left_toe /human_body_detection/points
 
 roslaunch gait_parameters_estimation gait_estimation.launch
 ```
