@@ -32,6 +32,7 @@ docker run \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v $PWD/src:/home/docker/ros_ws/src \
     -v $PWD/data:/home/docker/ros_ws/data \
+    -v /home/marie/robotrainer_docker_melodic:/home/docker/robotrainer_workspace:rw \
     -v /dev:/dev  \
     ${CONTAINER_NAME}:${CONTAINER_TAG} \
     ${COMMAND}

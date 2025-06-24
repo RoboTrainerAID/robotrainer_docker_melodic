@@ -44,7 +44,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 #     <YOUR_PACKAGE>
 RUN pip install \
     pyyaml \
-    scipy
+    scipy \
+    rosbag_pandas \
+    pandas 
 
 ##############################################################################
 ##                                 dependencies_ws                          ##
@@ -76,7 +78,7 @@ RUN git clone --branch melodic https://github.com/RoboTrainerAID/ipr_helpers.git
 WORKDIR /home/${USER}/dependencies_ws
 RUN rosdep update --rosdistro ${ROS_DISTRO}
 USER root
-RUN apt-get update 
+RUN sudo apt-get update 
 RUN rosdep install --from-paths src --ignore-src -r -y
 RUN rm -rf /var/lib/apt/lists/*
 USER ${USER}
@@ -97,6 +99,12 @@ COPY ./src ./src
 USER root
 RUN apt-get update 
 RUN rosdep install --from-paths src --ignore-src -r -y
+RUN apt-get update && apt-get install -y ros-melodic-tf2-sensor-msgs
+RUN apt-get install -y \
+    ros-melodic-geometry-msgs \
+    ros-melodic-nav-msgs \
+    ros-melodic-sensor-msgs \
+    ros-melodic-visualization-msgs
 RUN rm -rf /var/lib/apt/lists/*
 USER ${USER}
 
