@@ -5,8 +5,7 @@ import os
 
 from cut_rosbag import RosbagTrimmer
 from sample_rosbag import RosbagCompressor
-from csv_convert import RosbagMerger
-from csv_1 import RosbagToCSVConverter
+from csv_convert import RosbagToCSVConverter
 
 def main():
     bag_folder = "data"
@@ -68,13 +67,10 @@ def main():
         sampler.compress()
         print("[MAIN] Sampling done for:", bag_name)
 
-    # merger = RosbagMerger(
-    #     sample_folder="data/sample",
-    #     output_folder="data/merged"
-    # )
     merger = RosbagToCSVConverter(
         sample_folder="data/sample",
-        output_folder="data/merged"
+        output_folder="data/merged",
+        final_output="data/merged/final_features.csv"
     )
     merger.process_all()
     print("Merge and CSV conversion complete.")
