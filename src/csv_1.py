@@ -6,12 +6,11 @@ import glob
 import rosbag
 import pandas as pd
 
-class RosbagMerger:
+class RosbagToCSVConverter:
     """
-    Merges multiple ROS bag files with the same prefix and converts the merged bag to CSV,
-    exporting only relevant fields.
+    Converts individual ROS bag files to CSV, exporting only relevant fields.
     """
-    def __init__(self, sample_folder="data/sample", output_folder="data/merged"):
+    def __init__(self, sample_folder="data/sample", output_folder="data/converted"):
         self.sample_folder = sample_folder
         self.output_folder = output_folder
 
@@ -20,25 +19,6 @@ class RosbagMerger:
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
             print("[INIT] Created output folder:", self.output_folder)
-
-    def merge_prefix(self, prefix):
-        pattern = os.path.join(self.sample_folder, "{}*.bag".format(prefix))
-        files = sorted(glob.glob(pattern))
-        if not files:
-            print("[MERGE] No bags found for prefix '{}'.".format(prefix))
-            return None
-
-        merged_name = "{}_merged.bag".format(prefix)
-        out_path = os.path.join(self.output_folder, merged_name)
-
-        print("[MERGE] Merging {} files with prefix '{}' → {}".format(
-            len(files), prefix, merged_name))
-        with rosbag.Bag(out_path, 'w') as outbag:
-            for fb in files:
-                print("  - Adding", fb)
-                for topic, msg, t in rosbag.Bag(fb).read_messages():
-                    outbag.write(topic, msg, t)
-        return out_path
 
     def bag_to_csv(self, bag_path):
         records = []
@@ -106,9 +86,10 @@ class RosbagMerger:
 
     def process_all(self):
         files = sorted(glob.glob(os.path.join(self.sample_folder, "*.bag")))
-        prefixes = set(os.path.basename(f).split(".bag")[0].split("_")[0] for f in files)
+        if not files:
+            print("[PROCESS] No bag files in '{}'.".format(self.sample_folder))
+            return
 
-        for prefix in prefixes:
-            merged = self.merge_prefix(prefix)
-            if merged:
-                self.bag_to_csv(merged)
+        for bag_file in files:
+            print("[PROCESS] Converting:", bag_file)
+            self.bag_to_csv(bag_file)
