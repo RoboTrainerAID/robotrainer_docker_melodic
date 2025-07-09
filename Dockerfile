@@ -44,7 +44,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 #     <YOUR_PACKAGE>
 RUN pip install \
     pyyaml \
-    scipy
+    scipy \
+    pandas \
+    rosbags
 
 ##############################################################################
 ##                                 dependencies_ws                          ##
