@@ -14,12 +14,14 @@
     },
     "python.analysis.typeCheckingMode": "off",
     "[python]": {
-    "editor.defaultFormatter": "ms-python.autopep8",
-    "editor.formatOnSave": false
-  },
+        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.formatOnSave": false
+    },
     "autopep8.args": [
-    "--max-line-length",
-    "150"
+        "--max-line-length",
+        "150"
     ],
-    "cmake.ignoreCMakeListsMissing": true
+    "cmake.ignoreCMakeListsMissing": true,
+    "git.autoRepositoryDetection": "subFolders",
+    "git.repositoryScanMaxDepth": 5
 }

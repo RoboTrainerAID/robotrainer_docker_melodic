@@ -129,6 +129,8 @@ RUN git clone --branch melodic https://github.com/RoboTrainerAID/ipr_helpers.git
 RUN git clone --branch melodic https://github.com/RoboTrainerAID/iirob_led.git
 RUN git clone --branch melodic https://github.com/RoboTrainerAID/robotrainer_control.git
 RUN mv ./robotrainer_control/robotrainer_parameters . && \
+    mv ./robotrainer_control/robotrainer_panel . && \
+    mv ./robotrainer_control/robotrainer_data_service . && \
     rm -rf ./robotrainer_control
 
 # Repos cloned in docker ws
@@ -142,7 +144,7 @@ WORKDIR /home/${USER}/dependencies_ws
 RUN rosdep update --rosdistro ${ROS_DISTRO}
 USER root
 RUN apt-get update 
-RUN rosdep install --from-paths src --ignore-src -r -y
+RUN rosdep install --from-paths src --ignore-src -r -y --skip-keys libqt5core5t64
 RUN rm -rf /var/lib/apt/lists/*
 USER ${USER}
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
