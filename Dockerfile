@@ -36,9 +36,67 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install custom dependencies
-# RUN apt-get update && apt-get install --no-install-recommends -y \
-#     <YOUR_PACKAGE> \
-#     && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    ros-melodic-cob-default-env-config \
+    ros-melodic-cob-voltage-control \
+    ros-melodic-cob-frame-tracker \
+    ros-melodic-cob-navigation-global \
+    ros-melodic-cob-twist-controller \
+    ros-melodic-cob-teleop \
+    ros-melodic-cob-collision-velocity-filter \
+    ros-melodic-cob-control-mode-adapter \
+    ros-melodic-cob-image-flip \
+    ros-melodic-canopen-motor-node \
+    ros-melodic-cob-phidgets \
+    ros-melodic-cob-base-controller-utils \
+    ros-melodic-cob-base-velocity-smoother \
+    ros-melodic-rosserial-python \
+    ros-melodic-cob-cam3d-throttle \
+    ros-melodic-cob-script-server \
+    ros-melodic-cob-obstacle-distance \
+    ros-melodic-cob-supported-robots \
+    ros-melodic-cob-light \
+    ros-melodic-rplidar-ros \
+    ros-melodic-rosserial-server \
+    ros-melodic-cob-safety-controller \
+    ros-melodic-spacenav-node \
+    ros-melodic-cob-sick-s300 \
+    ros-melodic-cob-linear-nav \
+    ros-melodic-cob-hand-bridge \
+    ros-melodic-joy \
+    ros-melodic-velocity-controllers \
+    ros-melodic-cob-gazebo-worlds \
+    ros-melodic-cob-sound \
+    ros-melodic-rosparam-handler \
+    ros-melodic-sick-safetyscanners \
+    ros-melodic-cob-phidget-em-state \
+    ros-melodic-twist-mux \
+    ros-melodic-cob-bms-driver \
+    ros-melodic-usb-cam \
+    ros-melodic-cob-command-gui \
+    ros-melodic-cob-docker-control \
+    ros-melodic-cob-mapping-slam \
+    ros-melodic-cob-scan-unifier \
+    ros-melodic-cob-monitoring \
+    ros-melodic-teleop-twist-joy \
+    ros-melodic-ati-force-torque \
+    ros-melodic-cob-reflector-referencing \
+    ros-melodic-costmap-2d \
+    ros-melodic-cob-omni-drive-controller \
+    ros-melodic-generic-throttle \
+    ros-melodic-openni2-launch \
+    ros-melodic-joint-state-publisher-gui \
+    ros-melodic-openni-launch \
+    ros-melodic-cob-mecanum-controller \
+    ros-melodic-cob-android-script-server \
+    ros-melodic-canopen-chain-node \
+    ros-melodic-cob-mimic \
+    ros-melodic-cob-sick-lms1xx \
+    ros-melodic-cob-helper-tools \
+    ros-melodic-joint-trajectory-controller \
+    ros-melodic-cob-dashboard \
+    ros-melodic-cob-phidget-power-state \
+    && rm -rf /var/lib/apt/lists/*
 
 # RUN pip install \
 #     <YOUR_PACKAGE>
@@ -65,12 +123,19 @@ RUN git clone --branch robotrainer2 https://github.com/RoboTrainerAID/sr2_bringu
 RUN git clone --branch melodic https://github.com/RoboTrainerAID/robotrainer.git
 
 # Gait related repos
-# RUN git clone --branch melodic https://github.com/RoboTrainerAID/gait_parameters_estimation.git
 RUN git clone --branch main https://github.com/RoboTrainerAID/human_body_detection.git
 RUN git clone --branch melodic_robotrainer2 https://github.com/RoboTrainerAID/iirob_filters.git
 RUN git clone --branch melodic https://github.com/RoboTrainerAID/ipr_helpers.git
+RUN git clone --branch melodic https://github.com/RoboTrainerAID/iirob_led.git
+RUN git clone --branch melodic https://github.com/RoboTrainerAID/robotrainer_control.git
+RUN mv ./robotrainer_control/robotrainer_parameters . && \
+    rm -rf ./robotrainer_control
+
+# Repos cloned in docker ws
+# RUN git clone --branch melodic https://github.com/RoboTrainerAID/gait_parameters_estimation.git
 # RUN git clone --branch melodic https://github.com/RoboTrainerAID/leg_tracker.git
 # RUN git clone --branch melodic https://github.com/RoboTrainerAID/camera_lower_leg_tracking.git
+# RUN git clone --branch melodic https://github.com/RoboTrainerAID/robotrainer_user_performance.git
 
 # Build dependencies_ws
 WORKDIR /home/${USER}/dependencies_ws

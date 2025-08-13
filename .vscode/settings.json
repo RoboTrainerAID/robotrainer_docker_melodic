@@ -20,5 +20,6 @@
     "autopep8.args": [
     "--max-line-length",
     "150"
-    ]
+    ],
+    "cmake.ignoreCMakeListsMissing": true
 }
