@@ -13,7 +13,7 @@
    - Executing `./start_docker.sh` again in a new terminal will connect to the already running container.
 6. Launch robot URDF and gait_estimation with:
    ```bash
-   roslaunch gait_parameters_estimation only_gait_estimation.launch
+   roslaunch gait_parameters_estimation launch_from_bag_urdf_and_tf.launch
    ```
 7. Launch RViz for visualization with:
    ```bash
@@ -30,6 +30,25 @@
    - Select `Streaming -> ROS Topic Subscriber` Press START and select all topics
    - Increase the buffer size from 5 -> 20
    - Drag and drop the topics into the graph area
+
+```bash
+# (Option 1)
+# If bag is recorded without /tf
+# launch urdf and robot description publisher (for tfs)
+roslaunch gait_parameters_estimation launch_from_bag_urdf_and_tf.launch
+roslaunch za_experimental rviz.launch
+
+# (Option 2)
+# Also publish scenario data in rviz
+roslaunch robotrainer_study_automatic_assessment rviz_scenario_and_data.launch
+
+# (Option 3)
+# If bag is recorded with /tf
+roslaunch gait_parameters_estimation rviz_with_urdf.launch
+
+# (Finally)
+rosbag play /path/to/your.bag
+```
 
 ## Topics to record:
 - /base/fts_adaptive_force_controller/debug/velocity_output
@@ -76,10 +95,6 @@ rosbag record /base/fts_adaptive_force_controller/debug/velocity_output /mobile_
 
 # copy data with scp and ssh with laptop
 scp robotrainer_iras:/home/robotrainer/workspace/ros_ws_melodic_robotrainer/src/za_experimental/data/2025-X.bag /home/andreas/code/robotrainer/bags/
-```
-
-
-roslaunch gait_parameters_estimation collect_data.launch
 ```
 
 
