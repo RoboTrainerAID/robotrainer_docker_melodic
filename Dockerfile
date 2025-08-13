@@ -144,7 +144,7 @@ WORKDIR /home/${USER}/dependencies_ws
 RUN rosdep update --rosdistro ${ROS_DISTRO}
 USER root
 RUN apt-get update 
-RUN rosdep install --from-paths src --ignore-src -r -y --skip-keys libqt5core5t64
+RUN rosdep install --from-paths src --ignore-src -r -y
 RUN rm -rf /var/lib/apt/lists/*
 USER ${USER}
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
