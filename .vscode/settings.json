@@ -23,5 +23,5 @@
     ],
     "cmake.ignoreCMakeListsMissing": true,
     "git.autoRepositoryDetection": "subFolders",
-    "git.repositoryScanMaxDepth": 5
+    "git.repositoryScanMaxDepth": -1
 }
