@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import os, glob
-from rosbag_trimmer import RosbagTrimmer   
+from rosbag_trimmer import RosbagTrimmer
+from bag_processor import BagProcessor
 
 def main():
     bag_folder = "data"   
@@ -30,6 +31,11 @@ def main():
             print("[MAIN] Done:", trimmer.output_path)
         else:
             print("[MAIN] Trim failed for:", bag_name)
+
+    print("[MAIN] Starting BagProcessor...")
+    processor = BagProcessor("src/config.ini")
+    processor.process_all_bags(folder="data/cut")
+    print("[MAIN] Done processing all bags.")
 
 
 if __name__ == "__main__":

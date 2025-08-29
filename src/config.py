@@ -105,7 +105,7 @@ def main():
     print("Downsample:", bin_size)
     print("Columns:", specs)
 
-    bag_files = glob.glob("data/KATE*.bag")
+    bag_files = glob.glob("data/cut/KATE*.bag")
     if not bag_files:
         raise IOError("No bag files found")
     
