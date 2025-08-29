@@ -4,6 +4,7 @@ import rosbag
 import pandas as pd
 import os, glob, re
 
+
 def parse_config(path="src/config.ini"):
     cfg = ConfigParser.ConfigParser()
     if not cfg.read(path):
@@ -39,9 +40,17 @@ def process_bag(bag_path, specs, bin_size_hz):
     rows = []
 
     with rosbag.Bag(bag_path) as bag:
+        start_time = None
+        end_time = None
+
         for topic, msg, t in bag.read_messages(topics=set(tp for tp, _ in specs.values())):
             ts = t.to_sec()
-            row = {"time": ts}
+            if start_time is None:
+                start_time = ts
+            end_time = ts
+
+            rel_time = ts - start_time
+            row = {"time": rel_time}
             for col, (tp, field) in specs.items():
                 if tp == topic:
                     row[col] = extract_field(msg, field)
@@ -52,7 +61,7 @@ def process_bag(bag_path, specs, bin_size_hz):
 
     # Build DataFrame
     df = pd.DataFrame(rows).sort_values("time")
-
+        
     # Determine bin length in seconds
     bin_size_sec = 1.0 / float(bin_size_hz)
 
@@ -70,6 +79,10 @@ def process_bag(bag_path, specs, bin_size_hz):
 
     # Set time interval = Start of bins
     df_grouped["time"] = [iv.left for iv in bins[:len(df_grouped)]]
+
+    # Add total duration
+    total_duration = end_time - start_time
+    df_grouped["total_duration"] = total_duration
 
     return df_grouped
 
@@ -89,8 +102,8 @@ def parse_user_path(filename):
 
 def main():
     bin_size, specs = parse_config("src/config.ini")
-    print("⏬ Downsample:", bin_size)
-    print("🎯 Columns:", specs)
+    print("Downsample:", bin_size)
+    print("Columns:", specs)
 
     bag_files = glob.glob("data/KATE*.bag")
     if not bag_files:
@@ -116,7 +129,7 @@ def main():
         df["user"] = user
         df["path"] = path
 
-        df = df[["time"] + list(specs.keys()) + ["user", "path"]]   # Fix order
+        df = df[["time"] + list(specs.keys()) + ["user", "path", "total_duration"]]   # Fix order
         
         all_dfs.append(df)
 
@@ -124,7 +137,7 @@ def main():
     df_all = pd.concat(all_dfs, ignore_index=True)
     out_csv = "data/KATE_AA_dataset_{}Hz.csv".format(bin_size)
     df_all.to_csv(out_csv, index=False)
-    print("✅ Alle Bags in einer CSV gespeichert:", out_csv)
+    print("Alle Bags in einer CSV gespeichert:", out_csv)
 
 
 if __name__ == "__main__":
