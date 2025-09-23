@@ -23,22 +23,19 @@ The script `main.py` performs two steps::
 2. **BagProcessor** 
 - Reads all trimmed bag files from `data/cut/`.
 - Uses `src/config.ini` to know which topics/fields to extract.
-- Downsamples the data to a fixed frequency (`bin_size`), specified in the config.
+- No downsampling is applied – every available message from the selected topics is written into the dataset.
 - Extracted signals are stored in a **tabular format (CSV)**.
 - Additional metadata (e.g., user ID, path ID, total duration) is added to each row.
 - All processed bags are concatenated into one dataset file:
 preprocessing:
    ```swift
-   data/cut/KATE_AA_dataset_<bin_size>Hz.csv
+   data/cut/KATE_AA_dataset.csv
    ```
 
 ## Configuration (`config.ini`)
-The `BagProcessor` uses a configuration file (`src/config.ini`) to know **which topics and message fields** to extract from the ROS bags and how to downsample them.
+The `BagProcessor` uses a configuration file (`src/config.ini`) to know **which topics and message fields** to extract from the ROS bags.
 
 ### Sections
-- **[SETTINGS]**
-   - `bin_size`: Target sampling frequency in Hz (e.g. `10` → data is downsampled to 10 Hz).
-   - `max_bins`: Optional limit for the number of bins (can be `None`).
 - **[TOPICS]**  
    Each entry defines a column in the output CSV.  
    Format: 
@@ -53,10 +50,6 @@ The `BagProcessor` uses a configuration file (`src/config.ini`) to know **which 
 ### Example (excerpt from `config.ini`)
 
 ```ini
-[SETTINGS]
-bin_size = 10
-max_bins = None
-
 [TOPICS]
 force_input_raw_x = /base/fts_adaptive_force_controller/debug/force_input_raw|wrench.force.x
 force_input_raw_y = /base/fts_adaptive_force_controller/debug/force_input_raw|wrench.force.y
@@ -67,4 +60,4 @@ heart_rate = /biosensors/polar_oh1/hr|data
 
 ## Output
 - **Trimmed Ros bags** → `data/cut/*.bag`
-- **Final dataset (CSV)** → `data/cut/KATE_AA_dataset_<bin_size>Hz.csv`
+- **Final dataset (CSV)** → `data/cut/KATE_AA_dataset.csv`
