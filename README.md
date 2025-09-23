@@ -10,7 +10,7 @@
    ```bash
    python src/main.py
    ```
-## Data Preprocessing
+## Bag Processor
 The script `main.py` performs two steps::
 1. **RosbagTrimmer**
 - Reads each `.bag` file in the `data/`.
