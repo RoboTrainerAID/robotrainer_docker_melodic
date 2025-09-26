@@ -1,4 +1,5 @@
 {
+    "git.autoRepositoryDetection": "subFolders",
     "git.repositoryScanMaxDepth": -1,
     "python.autoComplete.extraPaths": [
         "/home/docker/ros_ws/devel/lib/python2.7/dist-packages",
@@ -78,6 +79,26 @@
         "string_view": "cpp",
         "ratio": "cpp",
         "thread": "cpp",
-        "core": "cpp"
+        "core": "cpp",
+        "csignal": "cpp",
+        "hash_map": "cpp",
+        "condition_variable": "cpp",
+        "unordered_set": "cpp",
+        "hash_set": "cpp",
+        "rope": "cpp",
+        "slist": "cpp",
+        "future": "cpp",
+        "mutex": "cpp",
+        "cfenv": "cpp",
+        "regex": "cpp",
+        "typeindex": "cpp",
+        "valarray": "cpp",
+        "any": "cpp",
+        "codecvt": "cpp",
+        "csetjmp": "cpp",
+        "forward_list": "cpp",
+        "scoped_allocator": "cpp",
+        "cuchar": "cpp",
+        "shared_mutex": "cpp"
     }
 }
