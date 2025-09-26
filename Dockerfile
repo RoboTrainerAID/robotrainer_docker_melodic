@@ -4,6 +4,11 @@
 # Ubuntu 18.04. prebuild
 FROM andreaszachariae/robotrainer_docker:melodic
 
+# Install custom dependencies
+# RUN apt-get update && apt-get install --no-install-recommends -y \
+#     <YOUR_PACKAGE> \
+#     && rm -rf /var/lib/apt/lists/*
+
 ##############################################################################
 ##                                 dependencies_ws                          ##
 ##############################################################################

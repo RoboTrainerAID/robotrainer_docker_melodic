@@ -1,0 +1,21 @@
+repositories:
+  camera_lower_leg_tracking:
+    type: git
+    url: git@github.com:RoboTrainerAID/camera_lower_leg_tracking.git
+    version: melodic
+  gait_parameters_estimation:
+    type: git
+    url: https://github.com/RoboTrainerAID/gait_parameters_estimation.git
+    version: melodic
+  leg_tracker:
+    type: git
+    url: https://github.com/RoboTrainerAID/leg_tracker.git
+    version: melodic
+  robotrainer_user_performance:
+    type: git
+    url: git@github.com:RoboTrainerAID/robotrainer_user_performance.git
+    version: melodic
+  za_experimental:
+    type: git
+    url: git@github.com:RoboTrainerAID/za_experimental.git
+    version: main
