@@ -1,43 +1,34 @@
-#!/bin/sh
+#!/bin/bash
 
-# Autostart command to run inside the container, default is bash
-# Usage1: Modify ./autostart.sh file and add custom command there
-# Usage2: Run from cli with ./start_docker "custom command"
-COMMAND=${1:-bash}
-CONTAINER_NAME=robotrainer_melodic
-CONTAINER_TAG=gait
-ROS_DOMAIN_ID=36
+# Name des Containers
+CONTAINER_NAME="robotrainer_melodic"
 
-# Check if the container is already running
-if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
-    echo "Container ${CONTAINER_NAME} is already running. Attaching to it..."
-    docker exec -it ${CONTAINER_NAME} ${COMMAND}
-    exit 0
-fi
+# Docker-Image
+IMAGE_NAME="robotrainer_melodic:gait"
 
-# Ensure XAUTHORITY is set
-export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}
+# ROS Workspace im Container
+WORKSPACE="/home/docker/ros_ws"
 
-docker run \
-    --name ${CONTAINER_NAME} \
-    --privileged \
-    -it \
-    --net host \
-    --rm \
-    -e DISPLAY=${DISPLAY} \
-    -e ROS_DOMAIN_ID=${ROS_DOMAIN_ID} \
-    -e QT_X11_NO_MITSHM=1 \
-    -e XAUTHORITY=${XAUTHORITY} \
-    -v $XAUTHORITY:$XAUTHORITY:rw \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -v $PWD/src:/home/docker/ros_ws/src \
-    -v $PWD/data:/home/docker/ros_ws/data \
-    -v /home/marie/robotrainer_docker_melodic:/home/docker/robotrainer_workspace:rw \
-    -v /dev:/dev  \
-    ${CONTAINER_NAME}:${CONTAINER_TAG} \
-    ${COMMAND}
+# Container starten
+docker run -it --name $CONTAINER_NAME --rm \
+  --entrypoint /bin/bash \
+  -v ${PWD}/src:$WORKSPACE/src \
+  -v ${PWD}/data:$WORKSPACE/data \
+  $IMAGE_NAME
+#!/bin/bash
 
-    # --env-file .env \
-    # libEGL for Gazebo needs access to /dev/dri/renderD129
-    # -v /dev:/dev \
-    # -v /lib/modules:/lib/modules:ro \
+# Name des Containers
+CONTAINER_NAME="robotrainer_melodic"
+
+# Docker-Image
+IMAGE_NAME="robotrainer_melodic:gait"
+
+# ROS Workspace im Container
+WORKSPACE="/home/docker/ros_ws"
+
+# Container starten
+docker run -it --name $CONTAINER_NAME --rm \
+  --entrypoint /bin/bash \
+  -v ${PWD}/src:$WORKSPACE/src \
+  -v ${PWD}/data:$WORKSPACE/data \
+  $IMAGE_NAME

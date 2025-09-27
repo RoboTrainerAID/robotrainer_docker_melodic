@@ -7,12 +7,11 @@ import os, glob, re
 
 
 class BagProcessor:
-    """Process ROS bags: extract topics, downsample, and save CSV."""
+    """Process ROS bags: extract topics and save CSV."""
 
     def __init__(self, config_path="src/config.ini"):
         self.config_path = config_path
-        self.bin_size, self.specs = self.parse_config(config_path)
-        print("[INIT] Downsample:", self.bin_size)
+        self.specs = self.parse_config(config_path)
         print("[INIT] Columns:", self.specs)
 
     def parse_config(self, path):
@@ -20,29 +19,31 @@ class BagProcessor:
         if not cfg.read(path):
             raise IOError("Config file not found: %s" % path)
 
-        bin_size = int(cfg.get("SETTINGS", "bin_size"))
         specs = {}
         for col, v in cfg.items("TOPICS"):
             if "|" not in v:
                 raise ValueError("Topic entry must contain 'topic|field': %s" % v)
             topic, field = v.split("|", 1)
             specs[col] = (topic.strip(), field.strip())
-        return bin_size, specs
+        return specs
 
     def extract_field(self, msg, field_path):
-        """Extracts nested fields from ROS message."""
+        """Extracts nested fields from ROS message and returns first value if iterable."""
         try:
             obj = msg
             for part in field_path.split("."):
                 obj = getattr(obj, part)
-            if isinstance(obj, (list, tuple)):
-                return obj[0] if obj else ""
+
+            # Wenn obj iterierbar ist, nimm nur das erste Element
+            if hasattr(obj, "__iter__") and not isinstance(obj, (str, bytes)):
+                return obj[0] if len(obj) > 0 else None
             return obj
         except Exception:
-            return ""
+            return None
+
 
     def process_bag(self, bag_path):
-        """Read bag, extract topics, and save all messages without downsampling."""
+        """Read bag, extract topics, and save all messages."""
         rows = []
         last_values = {col: "" for col in self.specs.keys()}  
 
@@ -96,6 +97,7 @@ class BagProcessor:
 
             df = self.process_bag(bag_path)
 
+            # Ensure all columns exist
             cols = ["time"] + list(self.specs.keys())
             for col in cols:
                 if col not in df.columns:
@@ -107,7 +109,7 @@ class BagProcessor:
             all_dfs.append(df)
 
         df_all = pd.concat(all_dfs, ignore_index=True)
-        out_csv = os.path.join(folder, "KATE_AA_dataset.csv".format(self.bin_size))
+        out_csv = os.path.join(folder, "KATE_AA_dataset.csv")
         df_all.to_csv(out_csv, index=False)
         print("[PROCESS] All bags saved to CSV:", out_csv)
         return out_csv
