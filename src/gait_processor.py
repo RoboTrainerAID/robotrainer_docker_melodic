@@ -6,7 +6,7 @@ import pandas as pd
 import os, glob, re
 
 
-class BagProcessor:
+class GaitProcessor:
     """Process ROS bags: extract topics and save CSV."""
 
     def __init__(self, config_path="src/config.ini"):
@@ -110,7 +110,7 @@ class BagProcessor:
 
         df_all = pd.concat(all_dfs, ignore_index=True)
         out_folder = "data"
-        out_csv = os.path.join(out_folder, "KATE_AA_dataset.csv")
+        out_csv = os.path.join(out_folder, "KATE_AA_dataset_gait.csv")
         df_all.to_csv(out_csv, index=False)
         print("[PROCESS] All bags saved to CSV:", out_csv)
         return out_csv
