@@ -3,6 +3,7 @@
 .idea/
 .DS_Store
 data/*.bag
+data/gait/*.bag
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

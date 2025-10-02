@@ -4,6 +4,20 @@
 # Ubuntu 18.04. prebuild
 FROM andreaszachariae/robotrainer_docker:melodic
 
+##############################################################################
+##                                   User                                   ##
+##############################################################################
+ARG USER=docker
+ARG PASSWORD=docker
+ARG UID=1000
+ARG GID=1000
+ENV USER=${USER}
+RUN groupadd -g ${GID} ${USER} \
+    && useradd -m -u ${UID} -g ${GID} -p "$(openssl passwd -1 ${PASSWORD})" \
+    --shell $(which bash) ${USER} -G sudo
+RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/sudogrp
+RUN usermod -a -G video ${USER}
+
 # Install custom dependencies
 # RUN apt-get update && apt-get install --no-install-recommends -y \
 #     <YOUR_PACKAGE> \
