@@ -1,11 +1,11 @@
 import pandas as pd
 import os
 
-class CsvTrimmer:
+class CsvTrimmer(object):
     """Trim merged CSV per (user, path) based on force_input_raw_x and reference_topic change."""
 
-    def __init__(self, csv_path, force_col="force_input_raw_x",
-                 ref_cols=("front", "left", "right"), out_folder="data/cut"):
+    def __init__(self, csv_path, force_col,
+                 ref_cols, out_folder):
         self.csv_path = csv_path
         self.force_col = force_col
         self.ref_cols = ref_cols
@@ -13,7 +13,7 @@ class CsvTrimmer:
 
         if not os.path.exists(out_folder):
             os.makedirs(out_folder)
-            print("[INIT] Created output folder:", out_folder)
+            print("[INIT] Created output folder: {}".format(out_folder))
 
     def find_trim_index(self, df):
         """Find index of first trim condition: force!=0 then reference_topic changes."""
@@ -24,7 +24,15 @@ class CsvTrimmer:
             # Condition 1: force != 0
             if not force_nonzero_seen and abs(float(row[self.force_col])) > 1e-6:
                 force_nonzero_seen = True
-                print(f"[SCAN] Force nonzero at time={row['time']:.3f}, user={row['user']}, path={row['path']}")
+                try:
+                    time_val = float(row['time'])
+                except (ValueError, TypeError):
+                    time_val = row['time']
+                if isinstance(time_val, float):
+                    print("[SCAN] Force nonzero at time={:.3f}".format(time_val))
+                else:
+                    print("[SCAN] Force nonzero at time={}, user={}, path={}".format(
+                        time_val, row['user'], row['path']))
 
             # Condition 2: reference change after force!=0
             if force_nonzero_seen:
@@ -33,8 +41,8 @@ class CsvTrimmer:
                     prev_triplet = triplet
                     continue
                 if triplet != prev_triplet:
-                    print(f"[SCAN] Reference change {prev_triplet} → {triplet} "
-                          f"at time={row['time']:.3f}, user={row['user']}, path={row['path']}")
+                    print("[SCAN] Reference change {} -> {} at time={:.3f}, user={}, path={}".format(
+                        prev_triplet, triplet, float(row['time']), row['user'], row['path']))
                     return idx
                 prev_triplet = triplet
 
@@ -45,15 +53,16 @@ class CsvTrimmer:
         """Trim a single (user, path) group."""
         idx = self.find_trim_index(df_group)
         if idx is None:
-            return df_group  # keep full if no trim condition
+            return df_group  
         return df_group.loc[idx:].reset_index(drop=True)
 
     def process(self, out_csv="trimmed_dataset.csv"):
+        """Process the CSV and save trimmed version."""
         df = pd.read_csv(self.csv_path)
 
         trimmed_groups = []
         for (user, path), group in df.groupby(["user", "path"]):
-            print(f"[PROCESS] Trimming user={user}, path={path}")
+            print("[PROCESS] Trimming user={}, path={}".format(user, path))
             group_sorted = group.sort_values("time").reset_index(drop=True)
             trimmed = self.trim_group(group_sorted)
             trimmed_groups.append(trimmed)
@@ -62,5 +71,5 @@ class CsvTrimmer:
 
         out_path = os.path.join(self.out_folder, out_csv)
         df_trimmed.to_csv(out_path, index=False)
-        print("[DONE] Trimmed CSV saved to:", out_path)
+        print("[DONE] Trimmed CSV saved to: {}".format(out_path))
         return out_path

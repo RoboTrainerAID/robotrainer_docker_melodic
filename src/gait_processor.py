@@ -15,12 +15,13 @@ class GaitProcessor:
         print("[INIT] Columns:", self.specs)
 
     def parse_config(self, path):
+        """Parse config file to get topic and field specifications."""
         cfg = ConfigParser.ConfigParser()
         if not cfg.read(path):
             raise IOError("Config file not found: %s" % path)
 
         specs = {}
-        for col, v in cfg.items("TOPICS"):
+        for col, v in cfg.items("TOPICS GAIT"):
             if "|" not in v:
                 raise ValueError("Topic entry must contain 'topic|field': %s" % v)
             topic, field = v.split("|", 1)
@@ -34,13 +35,11 @@ class GaitProcessor:
             for part in field_path.split("."):
                 obj = getattr(obj, part)
 
-            # Wenn obj iterierbar ist, nimm nur das erste Element
             if hasattr(obj, "__iter__") and not isinstance(obj, (str, bytes)):
                 return obj[0] if len(obj) > 0 else None
             return obj
         except Exception:
             return None
-
 
     def process_bag(self, bag_path):
         """Read bag, extract topics, and save all messages."""
@@ -77,6 +76,7 @@ class GaitProcessor:
         return df
 
     def parse_user_path(self, filename):
+        """Extract user and path from filename like 'KATE_U003_14_session1.bag'."""
         match = re.search(r'U(\d+)_([0-9]+)_', filename)
         if match:
             return match.group(1), match.group(2)
@@ -84,6 +84,7 @@ class GaitProcessor:
             return "", ""
 
     def process_all_bags(self, folder, pattern="KATE*.bag"):
+        """Process all bag files in folder and save combined CSV."""
         bag_files = glob.glob(os.path.join(folder, pattern))
         if not bag_files:
             raise IOError("No bag files found in folder: {}".format(folder))

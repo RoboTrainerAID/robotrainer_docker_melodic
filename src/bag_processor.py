@@ -4,6 +4,7 @@ import ConfigParser
 import rosbag
 import pandas as pd
 import os, glob, re
+from rosbag.bag import ROSBagUnindexedException
 
 
 class BagProcessor:
@@ -15,6 +16,7 @@ class BagProcessor:
         print("[INIT] Columns:", self.specs)
 
     def parse_config(self, path):
+        """Parse config file to get topic and field specifications."""
         cfg = ConfigParser.ConfigParser()
         if not cfg.read(path):
             raise IOError("Config file not found: %s" % path)
@@ -34,40 +36,45 @@ class BagProcessor:
             for part in field_path.split("."):
                 obj = getattr(obj, part)
 
-            # Wenn obj iterierbar ist, nimm nur das erste Element
             if hasattr(obj, "__iter__") and not isinstance(obj, (str, bytes)):
                 return obj[0] if len(obj) > 0 else None
             return obj
         except Exception:
             return None
 
-
     def process_bag(self, bag_path):
         """Read bag, extract topics, and save all messages."""
         rows = []
         last_values = {col: "" for col in self.specs.keys()}  
 
-        with rosbag.Bag(bag_path) as bag:
-            start_time = None
-            end_time = None
+        try:
+            with rosbag.Bag(bag_path) as bag:
+                start_time = None
+                end_time = None
 
-            for topic, msg, t in bag.read_messages(topics=set(tp for tp, _ in self.specs.values())):
-                ts = t.to_sec()
-                if start_time is None:
-                    start_time = ts
-                end_time = ts
-                rel_time = ts - start_time
+                for topic, msg, t in bag.read_messages(topics=set(tp for tp, _ in self.specs.values())):
+                    ts = t.to_sec()
+                    if start_time is None:
+                        start_time = ts
+                    end_time = ts
+                    rel_time = ts - start_time
 
-                updated = False
-                for col, (tp, field) in self.specs.items():
-                    if tp == topic:
-                        last_values[col] = self.extract_field(msg, field)
-                        updated = True
+                    updated = False
+                    for col, (tp, field) in self.specs.items():
+                        if tp == topic:
+                            last_values[col] = self.extract_field(msg, field)
+                            updated = True
 
-                if updated:
-                    row = {"time": rel_time}
-                    row.update(last_values)  
-                    rows.append(row)
+                    if updated:
+                        row = {"time": rel_time}
+                        row.update(last_values)  
+                        rows.append(row)
+        except ROSBagUnindexedException:
+            print("[ERROR] Bag is unindexed, skipping:", bag_path)
+            return pd.DataFrame()
+        except Exception as e:
+            print("[ERROR] Failed to process bag:", bag_path, "Error:", e)
+            return pd.DataFrame()                
 
         if not rows:
             return pd.DataFrame()
@@ -77,6 +84,7 @@ class BagProcessor:
         return df
 
     def parse_user_path(self, filename):
+        """Extract user and path from filename like 'KATE_U003_14_session1.bag'."""
         match = re.search(r'U(\d+)_([0-9]+)_', filename)
         if match:
             return match.group(1), match.group(2)
@@ -84,6 +92,7 @@ class BagProcessor:
             return "", ""
 
     def process_all_bags(self, folder, pattern="KATE*.bag"):
+        """Process all bag files in folder and save combined CSV."""
         bag_files = glob.glob(os.path.join(folder, pattern))
         if not bag_files:
             raise IOError("No bag files found in folder: {}".format(folder))
@@ -97,19 +106,32 @@ class BagProcessor:
 
             df = self.process_bag(bag_path)
 
+            if df.empty:
+                print("[PROCESS] No data extracted from bag:", bag_path)
+                continue        
+
             # Ensure all columns exist
             cols = ["time"] + list(self.specs.keys())
             for col in cols:
                 if col not in df.columns:
                     df[col] = ""
 
+            if "total_duration" not in df.columns:
+                df["total_duration"] =""
+
             df["user"] = user
             df["path"] = path
             df = df[["time"] + list(self.specs.keys()) + ["user", "path", "total_duration"]]
             all_dfs.append(df)
+        
+        if not all_dfs:
+            raise RunTimeError("No valid data extracted from any bags.")
 
         df_all = pd.concat(all_dfs, ignore_index=True)
         out_folder = "data"
+    
+        if not os.path.exists(out_folder):
+            os.makedirs(out_folder)
         out_csv = os.path.join(out_folder, "KATE_AA_dataset.csv")
         df_all.to_csv(out_csv, index=False)
         print("[PROCESS] All bags saved to CSV:", out_csv)
