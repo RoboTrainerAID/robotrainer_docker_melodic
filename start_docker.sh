@@ -32,10 +32,12 @@ docker run \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v $PWD/src:/home/docker/ros_ws/src \
     -v $PWD/data:/home/docker/ros_ws/data \
-    -v /dev:/dev  \
+    -v /iras/users/zaan0001/robotrainer:/home/docker/ros_ws/robotrainer \
     ${CONTAINER_NAME}:${CONTAINER_TAG} \
     ${COMMAND}
 
+    # -v /home/zaan0001/nas/robotrainer:/home/docker/ros_ws/robotrainer:rw \
+    # -v /dev:/dev  \
     # --env-file .env \
     # libEGL for Gazebo needs access to /dev/dri/renderD129
     # -v /dev:/dev \
