@@ -2,8 +2,7 @@
 # .vscode
 .idea/
 .DS_Store
-data/*.bag
-data/*/*.bag
+data/**/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
